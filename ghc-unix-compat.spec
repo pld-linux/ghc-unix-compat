@@ -1,18 +1,32 @@
+#
+# Conditional build:
+%bcond_without	prof	# profiling library
+#
 %define		pkgname	unix-compat
 Summary:	Portable POSIX-compatibility layer
+Summary(pl.UTF-8):	Przenośna warstwa zgodności z POSIX
 Name:		ghc-%{pkgname}
 Version:	0.4.1.1
-Release:	2
+Release:	3
 License:	BSD
 Group:		Development/Languages
-Source0:	http://hackage.haskell.org/packages/archive/%{pkgname}/%{version}/%{pkgname}-%{version}.tar.gz
+#Source0Download: http://hackage.haskell.org/package/unix-compat
+Source0:	http://hackage.haskell.org/package/%{pkgname}-%{version}/%{pkgname}-%{version}.tar.gz
 # Source0-md5:	41dae7a35895cc7a289d14d98287ce4a
-URL:		http://hackage.haskell.org/package/PACKAGE_NAME/
+URL:		http://hackage.haskell.org/package/unix-compat
 BuildRequires:	ghc >= 6.12.3
-BuildRequires:	ghc-prof
+BuildRequires:	ghc-unix >= 2.4
+BuildRequires:	ghc-unix < 2.8
+%if %{with prof}
+BuildRequires:	ghc-prof >= 6.12.3
+BuildRequires:	ghc-unix-prof >= 2.4
+BuildRequires:	ghc-unix-prof < 2.8
+%endif
 BuildRequires:	rpmbuild(macros) >= 1.608
 %requires_releq	ghc
 Requires(post,postun):	/usr/bin/ghc-pkg
+Requires:	ghc-unix >= 2.4
+Requires:	ghc-unix < 2.8
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # debuginfo is not useful for ghc
@@ -26,15 +40,22 @@ This package provides portable implementations of parts of the unix
 package. This package re-exports the unix package when available.
 When it isn't available, portable implementations are used.
 
+%description -l pl.UTF-8
+Ten pakiet dostarcza przenośne implementacje części pakietu unix. O
+ile to możliwe, reeksportuje pakiet unix. Jeśli nie jest on dostępny,
+używane są przenośne implementacje.
+
 %package prof
 Summary:	Profiling %{pkgname} library for GHC
 Summary(pl.UTF-8):	Biblioteka profilująca %{pkgname} dla GHC.
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	ghc-unix-prof >= 2.4
+Requires:	ghc-unix-prof < 2.8
 
 %description prof
-Profiling %{pkgname} library for GHC.  Should be installed when
-GHC's profiling subsystem is needed.
+Profiling %{pkgname} library for GHC. Should be installed when GHC's
+profiling subsystem is needed.
 
 %description prof -l pl.UTF-8
 Biblioteka profilująca %{pkgname} dla GHC. Powinna być zainstalowana
@@ -44,7 +65,8 @@ kiedy potrzebujemy systemu profilującego z GHC.
 %setup -q -n %{pkgname}-%{version}
 
 %build
-runhaskell Setup.lhs configure -v2 --enable-library-profiling \
+runhaskell Setup.lhs configure -v2 \
+	%{?with_prof:--enable-library-profiling} \
 	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
 	--libexecdir=%{_libexecdir} \
@@ -65,7 +87,7 @@ cp -a $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version} %{name}-%{version}-doc
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 
 runhaskell Setup.lhs register \
-	--gen-pkg-config=$RPM_BUILD_ROOT/%{_libdir}/%{ghcdir}/package.conf.d/%{pkgname}.conf
+	--gen-pkg-config=$RPM_BUILD_ROOT%{_libdir}/%{ghcdir}/package.conf.d/%{pkgname}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -81,19 +103,16 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{name}-%{version}-doc/*
 %{_libdir}/%{ghcdir}/package.conf.d/%{pkgname}.conf
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/*.o
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/*.a
-%exclude %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/*_p.a
-
-%dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System
-%dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/*.hi
-%dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.hi
-
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/HSunix-compat-%{version}.o
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSunix-compat-%{version}.a
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/include
+%dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/*.hi
+%dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat
+%dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.hi
 
 %files prof
 %defattr(644,root,root,755)
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/*_p.a
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSunix-compat-%{version}_p.a
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/*.p_hi
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.p_hi
