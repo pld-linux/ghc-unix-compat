@@ -23,7 +23,7 @@ BuildRequires:	ghc-unix-prof >= 2.4
 BuildRequires:	ghc-unix-prof < 2.8
 %endif
 BuildRequires:	rpmbuild(macros) >= 1.608
-%requires_releq	ghc
+%requires_eq	ghc
 Requires(post,postun):	/usr/bin/ghc-pkg
 Requires:	ghc-unix >= 2.4
 Requires:	ghc-unix < 2.8
