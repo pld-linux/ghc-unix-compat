@@ -6,13 +6,13 @@
 Summary:	Portable POSIX-compatibility layer
 Summary(pl.UTF-8):	Przenośna warstwa zgodności z POSIX
 Name:		ghc-%{pkgname}
-Version:	0.4.1.1
-Release:	3
+Version:	0.5.2
+Release:	1
 License:	BSD
 Group:		Development/Languages
 #Source0Download: http://hackage.haskell.org/package/unix-compat
 Source0:	http://hackage.haskell.org/package/%{pkgname}-%{version}/%{pkgname}-%{version}.tar.gz
-# Source0-md5:	41dae7a35895cc7a289d14d98287ce4a
+# Source0-md5:	6775a2f0e03863ea847f907a08599144
 URL:		http://hackage.haskell.org/package/unix-compat
 BuildRequires:	ghc >= 6.12.3
 BuildRequires:	ghc-unix >= 2.4
@@ -103,16 +103,19 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{name}-%{version}-doc/*
 %{_libdir}/%{ghcdir}/package.conf.d/%{pkgname}.conf
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/HSunix-compat-%{version}.o
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSunix-compat-%{version}.a
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSunix-compat-%{version}-*.so
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSunix-compat-%{version}-*.a
+%exclude %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSunix-compat-%{version}-*_p.a
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/include
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/*.hi
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/*.dyn_hi
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.hi
+%dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.dyn_hi
 
 %files prof
 %defattr(644,root,root,755)
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSunix-compat-%{version}_p.a
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSunix-compat-%{version}-*_p.a
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/*.p_hi
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.p_hi
