@@ -114,8 +114,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.hi
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.dyn_hi
 
+%if %{with prof}
 %files prof
 %defattr(644,root,root,755)
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSunix-compat-%{version}-*_p.a
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/*.p_hi
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.p_hi
+%endif
