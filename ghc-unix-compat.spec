@@ -111,8 +111,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/*.hi
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/*.dyn_hi
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat
-%dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.hi
-%dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.dyn_hi
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.hi
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/System/PosixCompat/*.dyn_hi
 
 %if %{with prof}
 %files prof
