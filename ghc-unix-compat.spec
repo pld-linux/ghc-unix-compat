@@ -7,7 +7,7 @@ Summary:	Portable POSIX-compatibility layer
 Summary(pl.UTF-8):	Przenośna warstwa zgodności z POSIX
 Name:		ghc-%{pkgname}
 Version:	0.5.2
-Release:	1
+Release:	2
 License:	BSD
 Group:		Development/Languages
 #Source0Download: http://hackage.haskell.org/package/unix-compat
